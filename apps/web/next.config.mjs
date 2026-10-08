@@ -103,6 +103,9 @@ const nextConfig = {
     formats: ["image/webp"], // WebP is faster to process and smaller than JPEG/PNG
     minimumCacheTTL: 60, // Cache optimized images for at least 60 seconds
     dangerouslyAllowSVG: true, // Allow SVG images
+    // Next.js 16 blocks private-network upstreams by default (SSRF guard). Opt-in for private-network
+    // self-hosted deployments (Issue #7184). Defaults to false when unset or set to false.
+    dangerouslyAllowLocalIP: process.env.NEXT_IMAGE_ALLOW_LOCAL_IP === "true",
     // Only universal provider/CDN hosts are optimized (ENG-1678). Same-origin `/storage/...` uploads
     // are relative paths (local images, always optimized) and need no entry; the deployment's own
     // domain is intentionally NOT listed since the same build serves every domain. Arbitrary

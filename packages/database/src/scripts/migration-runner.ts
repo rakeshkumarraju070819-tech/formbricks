@@ -1,7 +1,7 @@
 import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { promisify } from "node:util";
 import { logger } from "@formbricks/logger";
 import { Prisma, PrismaClient } from "../prisma";
@@ -49,16 +49,17 @@ const PRISMA_MIGRATIONS_DIR = path.resolve(__dirname, "../../.prisma-migrations"
 const DATABASE_PACKAGE_DIR = isBuilt ? path.resolve(__dirname, "../..") : path.resolve(__dirname, "../..");
 const REPO_ROOT_DIR = path.resolve(DATABASE_PACKAGE_DIR, "../..");
 const PRISMA_CONFIG_PATH = path.join(DATABASE_PACKAGE_DIR, "prisma.config.ts");
-const LOCAL_PRISMA_BIN = path.join(REPO_ROOT_DIR, "node_modules", ".bin", "prisma");
+const _PRISMA_BIN_NAME = process.platform === "win32" ? "prisma.cmd" : "prisma";
+const _LOCAL_PRISMA_BIN = path.join(REPO_ROOT_DIR, "node_modules", ".bin", _PRISMA_BIN_NAME);
 
 // Prefer the workspace-local prisma binary; fall back to PATH for Docker
 // runtimes where prisma is installed globally and node_modules/.bin is absent.
-const resolvePrismaBin = async (): Promise<string> => {
+const _resolvePrismaBin = async (): Promise<string> => {
   try {
-    await fs.access(LOCAL_PRISMA_BIN);
-    return LOCAL_PRISMA_BIN;
+    await fs.access(_LOCAL_PRISMA_BIN);
+    return _LOCAL_PRISMA_BIN;
   } catch {
-    return "prisma";
+    return _PRISMA_BIN_NAME;
   }
 };
 
@@ -411,8 +412,8 @@ const runSchemaMigrationBatch = async (
     // PrismaClient resolved above. prisma.config.ts always reads
     // env("DATABASE_URL"), so this is how MIGRATE_DATABASE_URL reaches the
     // subprocess without leaking into the parent's env.
-    const prismaBin = await resolvePrismaBin();
-    await execFileAsync(prismaBin, ["migrate", "deploy", "--config", PRISMA_CONFIG_PATH], {
+    const prismaCliEntry = path.join(REPO_ROOT_DIR, "node_modules", "prisma", "build", "index.js");
+    await execFileAsync(process.execPath, [prismaCliEntry, "migrate", "deploy", "--config", PRISMA_CONFIG_PATH], {
       cwd: REPO_ROOT_DIR,
       env: { ...process.env, DATABASE_URL: migrationDatabaseUrl },
     });
@@ -490,7 +491,7 @@ const loadMigrations = async (): Promise<MigrationScript[]> => {
       // It's a data migration, dynamically import and extract the scripts
       // Use .js extension when running from built code, .ts when running from source
       const modulePath = path.join(migrationPath, dataMigrationFileName);
-      const mod = (await import(modulePath)) as Record<string, MigrationScript | undefined>;
+      const mod = (await import(pathToFileURL(modulePath).href)) as Record<string, MigrationScript | undefined>;
 
       // Check each export in the module for a DataMigrationScript (type: "data")
       for (const key of Object.keys(mod)) {

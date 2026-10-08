@@ -577,6 +577,10 @@ const parsedEnv = createEnv({
     RECAPTCHA_SECRET_KEY: z.string().optional(),
     WEBAPP_URL: z.url().optional(),
     UNSPLASH_ACCESS_KEY: z.string().optional(),
+    NEXT_IMAGE_ALLOW_LOCAL_IP: z.preprocess(
+      emptyStringToUndefined,
+      z.enum(["true", "false", "1", "0"]).optional()
+    ),
 
     NODE_ENV: z.enum(["development", "production", "test"]).optional(),
     PROMETHEUS_EXPORTER_PORT: z.string().optional(),
@@ -737,6 +741,7 @@ const parsedEnv = createEnv({
     TERMS_URL: process.env.TERMS_URL,
     WEBAPP_URL: process.env.WEBAPP_URL,
     UNSPLASH_ACCESS_KEY: process.env.UNSPLASH_ACCESS_KEY,
+    NEXT_IMAGE_ALLOW_LOCAL_IP: process.env.NEXT_IMAGE_ALLOW_LOCAL_IP,
     NODE_ENV: process.env.NODE_ENV,
     PROMETHEUS_ENABLED: process.env.PROMETHEUS_ENABLED,
     PROMETHEUS_EXPORTER_PORT: process.env.PROMETHEUS_EXPORTER_PORT,

@@ -30,11 +30,11 @@
     }
   },
   "scripts": {
-    "dev": "concurrently -n \"ESM,UMD\" \"vite build --watch --mode dev\" \"BUILD_UMD=true vite build --watch --mode dev\"",
+    "dev": "concurrently -n \"ESM,UMD\" \"vite build --watch --mode dev\" \"cross-env BUILD_UMD=true vite build --watch --mode dev\"",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build && cross-env NODE_OPTIONS=--max-old-space-size=8192 BUILD_UMD=true vite build && cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc --project tsconfig.build.json",
     "build:analyze": "cross-env NODE_OPTIONS=--max-old-space-size=8192 ANALYZE=true vite build && cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc --project tsconfig.build.json",
     "build:dev": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode dev && cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc --project tsconfig.build.json",
-    "go": "concurrently -n \"ESM,UMD\" \"vite build --watch --mode dev\" \"BUILD_UMD=true vite build --watch --mode dev\"",
+    "go": "concurrently -n \"ESM,UMD\" \"vite build --watch --mode dev\" \"cross-env BUILD_UMD=true vite build --watch --mode dev\"",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

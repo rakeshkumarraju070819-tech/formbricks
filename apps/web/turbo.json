@@ -8,6 +8,7 @@
         "BASE_PATH",
         "BETTER_AUTH_URL",
         "E2E_TESTING",
+        "NEXT_IMAGE_ALLOW_LOCAL_IP",
         "NEXTAUTH_URL",
         "NODE_ENV",
         "POSTHOG_KEY",
