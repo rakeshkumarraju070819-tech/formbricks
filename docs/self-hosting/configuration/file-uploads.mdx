@@ -407,6 +407,7 @@ When using bundled RustFS:
 1. Verify bucket has public read access
 2. Check CORS configuration allows requests from your domain
 3. Ensure S3_ENDPOINT_URL is correctly set for third-party services
+4. **Private IP / Internal Network deployments (Issue #7184):** If your Formbricks instance, reverse proxy, or S3-compatible storage endpoint (such as MinIO or RustFS) resolves to a private IP address (e.g., `10.x.x.x`, `192.168.x.x`, `172.16.x.x`–`172.31.x.x`, or `127.0.0.1`), Next.js 16's image optimizer blocks requests by default with an SSRF guard error (`"upstream image ... resolved to private ip"`), causing project logos, favicons, or survey images to appear broken. Set `NEXT_IMAGE_ALLOW_LOCAL_IP=true` (or `1`) in your environment to allow image optimization from private network IP addresses.
 
 **RustFS not starting:**
 

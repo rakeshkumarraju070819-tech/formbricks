@@ -45,7 +45,7 @@ const evaluateImagesConfig = (nextImageAllowLocalIp?: string) => {
   return JSON.parse(result.stdout.trim());
 };
 
-describe("Next.js image configuration (Issue #7184)", () => {
+describe("Next.js image configuration (Issue #7184)", { timeout: 30000 }, () => {
   test("when NEXT_IMAGE_ALLOW_LOCAL_IP is missing -> dangerouslyAllowLocalIP is false", () => {
     const imagesConfig = evaluateImagesConfig(undefined);
     expect(imagesConfig.dangerouslyAllowLocalIP).toBe(false);

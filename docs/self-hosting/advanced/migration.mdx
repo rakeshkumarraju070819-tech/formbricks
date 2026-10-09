@@ -73,6 +73,8 @@ and use it only with a runtime that redacts credentials from its logs.
   generate a secret before upgrading — doing so **signs every current user out**, because their cookies
   were signed with that fallback value rather than with a secret of yours.
 
+- **NEXT_IMAGE_ALLOW_LOCAL_IP** can be set to `true` (or `1`) on private-network or air-gapped self-hosted instances whose domain, internal reverse proxy, or S3/MinIO/RustFS storage resolves to a private IP (e.g., `10.x.x.x`, `192.168.x.x`). Next.js 16 blocks private-network upstreams by default (SSRF guard); this opt-in setting restores image optimization for internal deployments where uploaded project logos, favicons, or survey images failed to render. Default is `false`.
+
 ### Encrypted single-use survey links must be regenerated (action required if you use them)
 
 Encrypted single-use survey links issued before v6 stop working and have to be regenerated.

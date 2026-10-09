@@ -129,6 +129,10 @@ x-environment: &environment
     # Set the below to your public domain (default is WEBAPP_URL)
     # PUBLIC_URL:
 
+    # Allow the Next.js image optimizer to fetch upstream images from private IP addresses.
+    # Set to true (or 1) if your Formbricks instance or S3/MinIO/RustFS storage resolves to a private IP (e.g. 10.x.x.x, 192.168.x.x).
+    # NEXT_IMAGE_ALLOW_LOCAL_IP: false
+
     # The SENTRY_DSN is used for error tracking and performance monitoring with Sentry.
     # SENTRY_DSN:
     # It's used for authentication when uploading source maps to Sentry, to make errors more readable.
